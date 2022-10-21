@@ -13,7 +13,14 @@
     }
 
     $(document).ready(function() { 
-        cycle = setInterval(reload, 1000);
+        $("#start").click(function() {
+            $.post('clockHandler.php', {'status': 'start'});
+            cycle = setInterval(reload, 1000);
+        });
+        $("#stop").click(function() {
+            $.post('clockHandler.php', {'status': 'stop'});
+            clearInterval(cycle);
+        });
     });
 
     </script>
@@ -23,6 +30,8 @@
 
 
 <body>
+    <button id="start">start</button>
+    <button id="stop">stop</button>
     <h4>time: </h4>
     <div id="time">00</div>
 
