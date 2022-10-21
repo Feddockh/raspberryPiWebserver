@@ -150,9 +150,9 @@
         $sql = "DELETE FROM scoreboard WHERE firstname = 'Chris'";
 
         if ($connection->query($sql) == TRUE) {
-            echo "Record deleted successfully";
+            echo "Record deleted successfully<br>";
         } else {
-            echo "Error deleting record: " . $connection->error;
+            echo "Error deleting record: " . $connection->error . "<br>";
         }
 
 
@@ -160,9 +160,9 @@
         $sql = "UPDATE scoreboard SET time='6:00', score=6*60 WHERE id = 1";
 
         if ($connection->query($sql) == TRUE) {
-            echo "Record updated successfully";
+            echo "Record updated successfully<br>";
         } else {
-            echo "Error updating record: " . $connection->error;
+            echo "Error updating record: " . $connection->error . "<br>";
         }
 
 
