@@ -21,6 +21,4 @@ if (file_exists("startTime.txt")) {
 
 echo $timer;
 
-
-
 ?>
