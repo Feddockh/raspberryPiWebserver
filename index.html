@@ -6,7 +6,7 @@
     <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script type = "text/javascript">
 
-    var time = '00:00';
+    var time;
 
     function reload() {
         $.post('clockHandler.php', {'time': time}, function(data) {

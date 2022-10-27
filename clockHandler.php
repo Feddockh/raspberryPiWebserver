@@ -18,7 +18,6 @@ if (array_key_exists('time', $_POST)) {
     // In the last case, the game must be active, and the time cannot be 0, so we  will increment the timer
     if ($output[0] == "active" && $_POST['time'] == '00:00') {
         // This needs to set and save the start time somehow
-        // TODO: Change this part so that it doesn't reset the start time if the file already exists (in the case where a new user hops on during active mode)
         setStartTime();
         echo '00:01';
     } elseif ($output[0] == "inactive" && $_POST['time'] != '00:00') {
