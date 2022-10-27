@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 // jQuery is calling to update the time
 if (array_key_exists('time', $_POST)) {
@@ -16,16 +17,44 @@ if (array_key_exists('time', $_POST)) {
     // If the game status is inactive, then the time will be 0
     // In the last case, the game must be active, and the time cannot be 0, so we  will increment the timer
     if ($output[0] == "active" && $_POST['time'] == '00:00') {
+        // This needs to set and save the start time somehow
+        // TODO: Change this part so that it doesn't reset the start time if the file already exists (in the case where a new user hops on during active mode)
+        setStartTime();
         echo '00:01';
     } elseif ($output[0] == "inactive" && $_POST['time'] != '00:00') {
         $command = "php tableHandler.php " . "'" . $_POST['time'] . "'";
         exec($command);
         echo '00:00';
+        destroyStartTime();
     } elseif ($output[0] == "inactive") {
         echo '00:00';
     } else {
-        incrementClock($_POST['time']);
+        // This should be changed to difference between start time and current time
+        $totalSeconds = time() - getStartTime();
+        formatClock($totalSeconds);
     }
+    
+}
+
+function setStartTime() {
+    $filename = "startTime.txt";
+    $fileAddress = fopen($filename, "w") or die("Unable to open file");
+    fwrite($fileAddress, time());
+    fclose($fileAddress);
+}
+
+function getStartTime() {
+    $filename = "startTime.txt";
+    if (file_exists($filename)) {
+        $fileAddress = fopen($filename, "r") or die("Unable to open file");
+        $startTime = fread($fileAddress, filesize($filename));
+        return $startTime;
+    }
+}
+
+function destroyStartTime() {
+    $filename = "startTime.txt";
+    unlink($filename);
 }
 
 // Increments the formatted clock time
@@ -37,6 +66,20 @@ function incrementClock($time) {
     
     // Increment the total seconds passed by 1
     $totalSeconds++;
+
+    // Convert the total seconds back into the formatted clock time
+    $seconds = $totalSeconds % 60;
+    $minutes = ($totalSeconds - $seconds) / 60;
+
+    // include padded zeros on output
+    if ($minutes < 10) echo '0';
+    echo $minutes . ":";
+    if ($seconds < 10) echo '0';
+    echo $seconds;
+}
+
+// Take seconds and convert to the formatted clock time
+function formatClock($totalSeconds) {
 
     // Convert the total seconds back into the formatted clock time
     $seconds = $totalSeconds % 60;
