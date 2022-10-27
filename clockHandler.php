@@ -1,7 +1,5 @@
 <?php
 
-//$_POST['time'] = '00:30';
-
 // jQuery is calling to update the time
 if (array_key_exists('time', $_POST)) {
 
@@ -14,17 +12,20 @@ if (array_key_exists('time', $_POST)) {
     exec('sudo /bin/python /var/www/html/gpioInput.py', $output, $result_code);
     
     // If both the game status is active and the time is 0, then we will begin the timer
+    // If the game is inactive and the time is not 0, stop the clock and send out the result
     // If the game status is inactive, then the time will be 0
     // In the last case, the game must be active, and the time cannot be 0, so we  will increment the timer
     if ($output[0] == "active" && $_POST['time'] == '00:00') {
         echo '00:01';
+    } elseif ($output[0] == "inactive" && $_POST['time'] != '00:00') {
+        $command = "php tableHandler.php " . "'" . $_POST['time'] . "'";
+        exec($command);
+        echo '00:00';
     } elseif ($output[0] == "inactive") {
         echo '00:00';
     } else {
         incrementClock($_POST['time']);
     }
-
-
 }
 
 // Increments the formatted clock time
@@ -47,6 +48,5 @@ function incrementClock($time) {
     if ($seconds < 10) echo '0';
     echo $seconds;
 }
-
 
 ?>
